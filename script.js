@@ -71,7 +71,7 @@ const sendBtn = document.getElementById("send-btn");
 /*******************************************
  * Funciones
  *******************************************/
-// Mostrar un mensaje en el chat
+// Mostrar mensaje en el chat
 function displayMessage(message, sender) {
   const msgDiv = document.createElement("div");
   msgDiv.classList.add("message", sender);
@@ -87,7 +87,7 @@ function startChat() {
   displayMessage(currentScenario.steps[scenarioStep], "bot");
 }
 
-// Maneja la lógica al enviar la respuesta del usuario (vendedor)
+// Maneja la lógica cuando el usuario (vendedor) envía su respuesta
 function handleUserInput() {
   const userText = userInput.value.trim();
   if (!userText) return;
@@ -95,34 +95,50 @@ function handleUserInput() {
   displayMessage(userText, "user");
   userInput.value = "";
 
-  // Convertir a minúsculas para comparar con keywords
+  // Convertimos a minúsculas para buscar palabras clave
   const lowerUserText = userText.toLowerCase();
 
   /****************************************************************
-   * AQUI PONEMOS LÓGICA PARA QUE EL CLIENTE (CHATBOT) RESPONDA
-   * DESDE SU PUNTO DE VISTA (NO COMO VENDEDOR)
+   * AQUI PONEMOS LÓGICA PARA QUE EL "CLIENTE" (CHATBOT) NO SE PONGA
+   * EN EL PAPEL DEL VENDEDOR, SINO QUE PIDA MÁS INFORMACIÓN O EXPRESE
+   * SUS DUDAS COMO CLIENTE.
    ****************************************************************/
 
-  // Ejemplo de keywords y respuesta como "cliente"
   if (lowerUserText.includes("descuento")) {
-    // El Chatbot (cliente) se interesa en el descuento, pero sigue dudando
-    displayMessage("¿Descuento? Suena interesante, pero quisiera saber si realmente vale la pena. ¿De cuánto estamos hablando?", "bot");
+    // CHATBOT reacciona a la mención de un descuento, 
+    // pidiendo más detalles (rol de cliente)
+    displayMessage(
+      "¿Descuento? Hmm, me interesa. ¿Cómo funcionaría exactamente y qué condiciones tiene?",
+      "bot"
+    );
     return; 
-  } else if (lowerUserText.includes("garantía")) {
-    // El Chatbot (cliente) pide más información sobre la garantía
-    displayMessage("La garantía me daría más confianza. ¿Cuánto tiempo cubre y qué incluye exactamente?", "bot");
+  } 
+  else if (lowerUserText.includes("garantía")) {
+    // CHATBOT quiere más info sobre la garantía
+    displayMessage(
+      "¿Garantía? Eso me daría más tranquilidad. ¿Cuánto tiempo cubre y qué sucede si el producto falla?",
+      "bot"
+    );
     return;
-  } else if (lowerUserText.includes("precio") || lowerUserText.includes("caro")) {
-    // El Chatbot (cliente) expresa objeción sobre el precio
-    displayMessage("Siguen pareciéndome costosos. ¿Tienes alguna opción más económica o algún plan de pago?", "bot");
+  } 
+  else if (lowerUserText.includes("precio") || lowerUserText.includes("caro")) {
+    // CHATBOT expresa objeción de precio
+    displayMessage(
+      "Todavía siento que puede ser costoso. ¿Ofrecen facilidades de pago o alguna promoción especial?",
+      "bot"
+    );
     return;
-  } else if (lowerUserText.includes("marca") || lowerUserText.includes("competencia")) {
-    // El Chatbot (cliente) compara marcas
-    displayMessage("He visto varias marcas en otras tiendas. ¿Por qué esta marca es mejor que la competencia?", "bot");
+  }
+  else if (lowerUserText.includes("marca") || lowerUserText.includes("competencia")) {
+    // CHATBOT compara marcas
+    displayMessage(
+      "He visto varias marcas en la competencia. ¿Por qué esta sería mejor que las demás?",
+      "bot"
+    );
     return;
   }
 
-  // Si no hay palabras clave, se avanza al siguiente paso del escenario (diálogo predefinido)
+  // Si no se detecta ninguna palabra clave, avanzamos al siguiente paso del guion
   scenarioStep++;
   if (scenarioStep < currentScenario.steps.length) {
     setTimeout(() => {
