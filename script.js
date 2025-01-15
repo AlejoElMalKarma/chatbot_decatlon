@@ -1,7 +1,7 @@
 /*******************************************
  * Escenarios (5 ejemplos):
- *   - 2 fáciles
- *   - 3 complicados
+ *   - 2 fáciles (cliente fácil)
+ *   - 3 complicados (cliente complicado)
  *******************************************/
 const scenarios = [
   // ESCENARIOS FÁCILES
@@ -71,7 +71,7 @@ const sendBtn = document.getElementById("send-btn");
 /*******************************************
  * Funciones
  *******************************************/
-// Mostrar un mensaje en la ventana del chat
+// Mostrar un mensaje en el chat
 function displayMessage(message, sender) {
   const msgDiv = document.createElement("div");
   msgDiv.classList.add("message", sender);
@@ -87,41 +87,49 @@ function startChat() {
   displayMessage(currentScenario.steps[scenarioStep], "bot");
 }
 
-// Maneja la lógica cuando el usuario (vendedor) envía su respuesta
+// Maneja la lógica al enviar la respuesta del usuario (vendedor)
 function handleUserInput() {
   const userText = userInput.value.trim();
   if (!userText) return;
 
-  // Mostrar el texto del usuario
   displayMessage(userText, "user");
   userInput.value = "";
 
-  // Convertimos a minúsculas para facilitar comparaciones
+  // Convertir a minúsculas para comparar con keywords
   const lowerUserText = userText.toLowerCase();
 
-  // Revisamos si hay alguna palabra clave de interés
+  /****************************************************************
+   * AQUI PONEMOS LÓGICA PARA QUE EL CLIENTE (CHATBOT) RESPONDA
+   * DESDE SU PUNTO DE VISTA (NO COMO VENDEDOR)
+   ****************************************************************/
+
+  // Ejemplo de keywords y respuesta como "cliente"
   if (lowerUserText.includes("descuento")) {
-    displayMessage("Podemos ofrecerte un 10% de descuento si adquieres más de un producto.", "bot");
-    return; // Salimos de la función sin avanzar el escenario
+    // El Chatbot (cliente) se interesa en el descuento, pero sigue dudando
+    displayMessage("¿Descuento? Suena interesante, pero quisiera saber si realmente vale la pena. ¿De cuánto estamos hablando?", "bot");
+    return; 
   } else if (lowerUserText.includes("garantía")) {
-    displayMessage("Brindamos garantía de 6 meses contra defectos de fábrica.", "bot");
+    // El Chatbot (cliente) pide más información sobre la garantía
+    displayMessage("La garantía me daría más confianza. ¿Cuánto tiempo cubre y qué incluye exactamente?", "bot");
     return;
   } else if (lowerUserText.includes("precio") || lowerUserText.includes("caro")) {
-    displayMessage("Nuestros precios están dentro del promedio de mercado, pero con mayor calidad.", "bot");
+    // El Chatbot (cliente) expresa objeción sobre el precio
+    displayMessage("Siguen pareciéndome costosos. ¿Tienes alguna opción más económica o algún plan de pago?", "bot");
     return;
   } else if (lowerUserText.includes("marca") || lowerUserText.includes("competencia")) {
-    displayMessage("Trabajamos con marcas líderes que destacan en innovación y durabilidad.", "bot");
+    // El Chatbot (cliente) compara marcas
+    displayMessage("He visto varias marcas en otras tiendas. ¿Por qué esta marca es mejor que la competencia?", "bot");
     return;
   }
 
-  // Si no se detecta ninguna palabra clave, avanzamos en el guion
+  // Si no hay palabras clave, se avanza al siguiente paso del escenario (diálogo predefinido)
   scenarioStep++;
   if (scenarioStep < currentScenario.steps.length) {
     setTimeout(() => {
       displayMessage(currentScenario.steps[scenarioStep], "bot");
     }, 600);
   } else {
-    // Si llegamos al final del escenario, mostramos un mensaje final
+    // Si llegamos al final del escenario, mensaje de cierre
     setTimeout(() => {
       displayMessage("¡Gracias por participar en la simulación!", "bot");
     }, 600);
@@ -136,5 +144,5 @@ userInput.addEventListener("keyup", (e) => {
   if (e.key === "Enter") handleUserInput();
 });
 
-// Iniciar el chat automáticamente al cargar la página
+// Iniciar el chat al cargar la página
 window.onload = startChat;
